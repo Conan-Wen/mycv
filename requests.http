@@ -1,0 +1,55 @@
+@baseUrl = http://localhost:3000
+
+# @name login
+### Sign in as an existing user
+POST {{baseUrl}}/auth/signin
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password":"12345"
+}
+
+###
+@token = {{login.response.body.$.id_token}}
+# @name whoami
+GET {{baseUrl}}/users/whoami
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### Create a new user
+POST {{baseUrl}}/users/signup
+@authToken = {{login.response.body.$.id_token}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password":"12345"
+}
+
+### Sign out
+POST {{baseUrl}}/users/signout
+
+### Find a particular user with a given ID
+GET {{baseUrl}}/users/bb452369-e743-4c38-9414-a83bc06a7168
+Authorization: Bearer {{token}}
+
+
+### Find all users with a given email
+GET {{baseUrl}}/users?email=test@test.com
+Authorization: Bearer {{token}}
+
+### Delete a user given id
+DELETE {{baseUrl}}/users/1
+Authorization: Bearer {{token}}
+
+### Update a user
+PATCH {{baseUrl}}/users/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "email": "aaa@aaa.com"
+
+}
